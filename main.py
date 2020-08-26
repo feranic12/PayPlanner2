@@ -5,11 +5,12 @@ import db
 def main():
     db_driver = db.DB("pay_planner2_db.db")
     table_data = db_driver.get_subs_for_table()
-    header_list = [str(x) for x in range(8)]
+    header_list = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
+                   "Период продления","Сумма", "Срок окончания"]
     layout = [[PySimpleGUI.Table(values = table_data,
-                headings = header_list)],
+                headings = header_list,
+               justification = "left")],
         [PySimpleGUI.Button("Добавить")],
-         [PySimpleGUI.Ok(), PySimpleGUI.Cancel()]
     ]
     layout1 = [[PySimpleGUI.Ok()]]
     window = PySimpleGUI.Window('Главное окно', layout)
