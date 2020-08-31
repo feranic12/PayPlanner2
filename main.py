@@ -5,6 +5,19 @@ import db
 def main():
     db_driver = db.DB("pay_planner2_db.db")
     table_data = db_driver.get_subs_for_table()
+    new_table_data = []
+    for row in range(len(table_data)-1):
+        row_list = []
+        for col in range(len(table_data[row])-1):
+            if col != 5:
+                new_cell = table_data[row][col]
+            else:
+                new_cell = str(table_data[row][col]) + " мес."
+            row_list.append(new_cell)
+            tup = tuple(row_list)
+        new_table_data.append(tup)
+    table_data = new_table_data
+
     header_list = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = PySimpleGUI.Table(values = table_data,
