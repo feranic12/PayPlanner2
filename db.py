@@ -11,7 +11,7 @@ class DB:
         cur = self.con.cursor()
         cur.execute("select count(*) from subscriptions")
         result = cur.fetchone()[0]
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
@@ -20,7 +20,7 @@ class DB:
         cur = self.con.cursor()
         cur.execute("select * from subscriptions")
         result = cur.fetchall()
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
@@ -31,7 +31,7 @@ class DB:
                     from subscriptions s join states st on s.state_id = st.id join bank_cards bc on s.card_id = bc.id 
                     join durations d on s.duration_id = d.id""")
         result = cur.fetchall()
-        self.con.commit()
+        #self.con.commit()
         return result
 
     # получение всех состояний для ComboBox
@@ -40,7 +40,7 @@ class DB:
         sql = """select * from states"""
         cur.execute(sql)
         result = cur.fetchall()
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
@@ -50,7 +50,7 @@ class DB:
         sql = """select * from durations"""
         cur.execute(sql)
         result = cur.fetchall()
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
@@ -59,7 +59,7 @@ class DB:
         cur = self.con.cursor()
         cur.execute("select * from durations where id = ?", [id])
         result = cur.fetchone()[1]
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
@@ -69,7 +69,7 @@ class DB:
         sql = """select * from bank_cards"""
         cur.execute(sql)
         result = cur.fetchall()
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
@@ -78,7 +78,7 @@ class DB:
         cur = self.con.cursor()
         cur.execute("select max(id) from subscriptions")
         n = cur.fetchone()[0]
-        self.con.commit()
+        #self.con.commit()
         try:
             cur.execute("insert into subscriptions values(?,?,?,?,?,?,?)", [n+1, t[0], t[1], t[2], t[3], t[4], t[5]])
         except sqlite3.DatabaseError as err:
@@ -91,7 +91,7 @@ class DB:
         cur = self.con.cursor()
         cur.execute("select * from subscriptions where id = ?", [id])
         result = cur.fetchone()
-        self.con.commit()
+        #self.con.commit()
         cur.close()
         return result
 
