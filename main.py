@@ -6,9 +6,9 @@ def main():
     db_driver = db.DB("pay_planner2_db.db")
     table_data = db_driver.get_subs_for_table()
     new_table_data = []
-    for row in range(len(table_data)-1):
+    for row in range(len(table_data)):
         row_list = []
-        for col in range(len(table_data[row])-1):
+        for col in range(len(table_data[row])):
             if col != 5:
                 new_cell = table_data[row][col]
             else:
