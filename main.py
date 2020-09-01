@@ -1,4 +1,4 @@
-import PySimpleGUI
+import PySimpleGUI as psg
 import db
 
 
@@ -20,26 +20,28 @@ def main():
 
     header_list = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
                    "Период продления","Сумма", "Срок окончания"]
-    my_table = PySimpleGUI.Table(values = table_data,
+    my_table = psg.Table(values = table_data,
                 headings=header_list,
                justification="left", bind_return_key=True, key="_table_")
     layout = [[my_table],
-        [PySimpleGUI.Button("Добавить")]
+        [psg.Button("Добавить")]
     ]
-    window = PySimpleGUI.Window('Главное окно', layout)
+    window = psg.Window('Главное окно', layout)
 
     while True:
         event, values = window.read()
         if event in (None, 'Exit', 'Cancel'):
             break
-        if event in ("_table_", "Добавить"):
-            layout1 = [[PySimpleGUI.Ok()]]
-            window1 = PySimpleGUI.Window("Окно 1", layout1)
+        if event == "_table_":
+            layout1 = [[psg.Ok()]]
+            window1 = psg.Window("Окно 1", layout1)
             while True:
                 event, values = window1.read()
                 if event in (None, 'Ok'):
                     break
             window1.close()
+        if event == "Добавить":
+            layout2 = [[psg.Ok()]]
     window.close()
 
 
