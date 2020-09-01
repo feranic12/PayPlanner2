@@ -46,7 +46,9 @@ def main():
             layout2 = [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
                        [psg.Text("Статус:"), psg.Combo(status_list, key="_status_"),
                         psg.Text("Срок продления:"), psg.Combo(duration_list, key="_duration_")],
-                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_")]]
+                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_")],
+                         [psg.Text("Сумма списания:"), psg.Input(key="_price_")],
+                          [psg.Button("Сохранить")]]
             window2 = psg.Window("Добавление подписки", layout2)
             while True:
                 event, values = window2.read()
