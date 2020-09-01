@@ -27,7 +27,7 @@ class DB:
     # получение выборки из нескольких таблиц БД, для заполнения таблицы в главном окне
     def get_subs_for_table(self):
         cur = self.con.cursor()
-        cur.execute("""select s.service_name, st.name, bc.bank, bc.pay_system, bc.number, d.duration, s.price, s.term_end 
+        cur.execute("""select s.service_name, st.name, bc.bank, bc.pay_system, d.duration, s.price, s.term_end 
                     from subscriptions s join states st on s.state_id = st.id join bank_cards bc on s.card_id = bc.id 
                     join durations d on s.duration_id = d.id""")
         result = cur.fetchall()

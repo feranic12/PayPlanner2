@@ -9,7 +9,7 @@ def main():
     for row in range(len(table_data)):
         row_list = []
         for col in range(len(table_data[row])):
-            if col != 5:
+            if col != 4:
                 new_cell = table_data[row][col]
             else:
                 new_cell = str(table_data[row][col]) + " мес."
@@ -18,7 +18,7 @@ def main():
         new_table_data.append(tup)
     table_data = new_table_data
 
-    header_list = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
+    header_list = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = psg.Table(values = table_data,
                 headings=header_list,
@@ -41,7 +41,18 @@ def main():
                     break
             window1.close()
         if event == "Добавить":
-            layout2 = [[psg.Ok()]]
+            status_list = list(db_driver.get_all_states())
+            duration_list = list(db_driver.get_all_durations())
+            layout2 = [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
+                       [psg.Text("Статус:"), psg.Combo(status_list, key="_status_"),
+                        psg.Text("Срок продления:"), psg.Combo(duration_list, key="_duration_")],
+                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_")]]
+            window2 = psg.Window("Добавление подписки", layout2)
+            while True:
+                event, values = window2.read()
+                if event in (None, 'Exit'):
+                    break
+                window2.close()
     window.close()
 
 
