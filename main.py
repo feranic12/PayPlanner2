@@ -9,7 +9,7 @@ def main():
     for row in range(len(table_data)):
         row_list = []
         for col in range(len(table_data[row])):
-            if col != 4:
+            if col != 2:
                 new_cell = table_data[row][col]
             else:
                 new_cell = str(table_data[row][col]) + " мес."
@@ -18,7 +18,7 @@ def main():
         new_table_data.append(tup)
     table_data = new_table_data
 
-    header_list = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система",
+    header_list = ["Название сервиса", "Состояние подписки",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = psg.Table(values = table_data,
                 headings=header_list,
@@ -41,11 +41,17 @@ def main():
                     break
             window1.close()
         if event == "Добавить":
-            status_list = list(db_driver.get_all_states())
-            duration_list = list(db_driver.get_all_durations())
+            states_list = []
+            duration_list = []
+            durations_from_db = db_driver.get_all_durations()
+            states_from_db = db_driver.get_all_states()
+            for st in range(0, len(states_from_db)):
+                states_list.append(str(states_from_db[st][0]))
+            for dur in range(0, len(durations_from_db)):
+                duration_list.append(str(durations_from_db[dur][0]) + " мес.")
             layout2 = [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
-                       [psg.Text("Статус:"), psg.Combo(status_list, key="_status_"),
-                        psg.Text("Срок продления:"), psg.Combo(duration_list, key="_duration_")],
+                       [psg.Text("Статус:"), psg.Combo(states_list, default_value=states_list[0], key="_status_"),
+                        psg.Text("Срок продления:"), psg.Combo(duration_list, default_value=duration_list[0], key="_duration_")],
                         [psg.Text("Срок окончания:"), psg.Input(key="_ending_")],
                          [psg.Text("Сумма списания:"), psg.Input(key="_price_")],
                           [psg.Button("Сохранить")]]
