@@ -26,7 +26,7 @@ class DB:
     def get_subs_for_table(self):
         cur = self.con.cursor()
         cur.execute("""select s.service_name, st.name, d.duration, s.price, s.term_end 
-                    from subscriptions s join states st on s.state_id = st.id join bank_cards bc on s.card_id = bc.id 
+                    from subscriptions s join states st on s.state_id = st.id 
                     join durations d on s.duration_id = d.id""")
         result = cur.fetchall()
         return result
@@ -57,15 +57,6 @@ class DB:
         cur.close()
         return result
 
-    # получение всех банковских карт для ComboBox
-    def get_all_bank_cards(self):
-        cur = self.con.cursor()
-        sql = """select * from bank_cards"""
-        cur.execute(sql)
-        result = cur.fetchall()
-        cur.close()
-        return result
-
     # добавление новой подписки в БД
     def add_subscription_to_db(self, t):
         cur = self.con.cursor()
@@ -90,8 +81,8 @@ class DB:
     def update_sub(self, t):
         cur = self.con.cursor()
         sql = """update subscriptions set service_name = ?, state_id = ?,
-                 card_id = ?, duration_id = ?, price = ?, term_end = ? where id = ?"""
-        cur.execute(sql,[t[1], t[2], t[3], t[4], t[5], t[6], t[0]])
+                  duration_id = ?, price = ?, term_end = ? where id = ?"""
+        cur.execute(sql,[t[1], t[2], t[3], t[4], t[5], t[0]])
         self.con.commit()
         cur.close()
 
