@@ -50,7 +50,7 @@ def main():
             for dur in range(0, len(durations_from_db)):
                 duration_list.append(str(durations_from_db[dur][0]))
             layout2 = [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
-                       [psg.Text("Статус:"), psg.Combo(states_list, default_value=states_list[0], key="_status_"),
+                       [psg.Text("Статус:"), psg.Combo(states_list, default_value=states_list[0], key="_state_"),
                         psg.Text("Срок продления:"), psg.Combo(duration_list, default_value=duration_list[0], key="_duration_"),
                        psg.Text("мес.")],
                          [psg.Text("Сумма списания:"), psg.Input(key="_price_")],

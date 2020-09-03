@@ -59,7 +59,7 @@ class DB:
 
     def get_id_from_state(self, state):
         cur = self.con.cursor()
-        cur.execute("select id from states where state = ?", [state])
+        cur.execute("select id from states where name = ?", [state])
         result = cur.fetchone()[0]
         cur.close()
         return result
@@ -70,7 +70,7 @@ class DB:
         cur.execute("select max(id) from subscriptions")
         n = cur.fetchone()[0]
         try:
-            cur.execute("insert into subscriptions values(?,?,?,?,?,?,?)", n+1, t[0], t[1], t[2], t[3], t[4], t[5])
+            cur.execute("insert into subscriptions values(?,?,?,?,?,?)", [n+1, t[0], t[1], t[2], t[3], t[4]])
         except sqlite3.DatabaseError as err:
             print("Ошибка работы с БД " + err)
         self.con.commit()
