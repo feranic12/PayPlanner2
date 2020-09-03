@@ -52,7 +52,9 @@ def main():
             layout2 = [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
                        [psg.Text("Статус:"), psg.Combo(states_list, default_value=states_list[0], key="_status_"),
                         psg.Text("Срок продления:"), psg.Combo(duration_list, default_value=duration_list[0], key="_duration_")],
-                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_")],
+                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_"),
+                         psg.CalendarButton("Введите дату окончания", target="_ending_", key="_termend_",
+                                            format="%d-%m-%Y")],
                          [psg.Text("Сумма списания:"), psg.Input(key="_price_")],
                           [psg.Button("Сохранить")]]
             window2 = psg.Window("Добавление подписки", layout2)
@@ -60,6 +62,14 @@ def main():
                 event, values = window2.read()
                 if event in (None, 'Exit'):
                     break
+                if event == "Сохранить":
+                    service_name = values["_subscription_"]
+                    state_id = db_driver.get_id_from_state(values["_state_"])
+                    duration_id = db_driver.get_id_from_duration(values["_duration_"])
+                    term_end = values["_ending_"]
+                    price = values["price"]
+                    tuple_to_add = (service_name, state_id, duration_id, price, term_end)
+                    db_driver.add_subscription_to_db(tuple_to_add)
                 window2.close()
     window.close()
 
