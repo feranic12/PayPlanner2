@@ -67,7 +67,7 @@ def main():
                     state_id = db_driver.get_id_from_state(values["_state_"])
                     duration_id = db_driver.get_id_from_duration(values["_duration_"])
                     term_end = values["_ending_"]
-                    price = values["price"]
+                    price = values["_price_"]
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
                     db_driver.add_subscription_to_db(tuple_to_add)
                 window2.close()
