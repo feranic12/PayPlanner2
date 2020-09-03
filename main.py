@@ -48,14 +48,14 @@ def main():
             for st in range(0, len(states_from_db)):
                 states_list.append(str(states_from_db[st][0]))
             for dur in range(0, len(durations_from_db)):
-                duration_list.append(str(durations_from_db[dur][0]) + " мес.")
+                duration_list.append(str(durations_from_db[dur][0]))
             layout2 = [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
                        [psg.Text("Статус:"), psg.Combo(states_list, default_value=states_list[0], key="_status_"),
-                        psg.Text("Срок продления:"), psg.Combo(duration_list, default_value=duration_list[0], key="_duration_")],
-                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_"),
-                         psg.CalendarButton("Введите дату окончания", target="_ending_", key="_termend_",
-                                            format="%d-%m-%Y")],
+                        psg.Text("Срок продления:"), psg.Combo(duration_list, default_value=duration_list[0], key="_duration_"),
+                       psg.Text("мес.")],
                          [psg.Text("Сумма списания:"), psg.Input(key="_price_")],
+                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_"),
+                          psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%d-%m-%Y")],
                           [psg.Button("Сохранить")]]
             window2 = psg.Window("Добавление подписки", layout2)
             while True:
