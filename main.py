@@ -63,6 +63,12 @@ def main():
                 if event in (None, 'Exit'):
                     break
                 if event == "Сохранить":
+                    if (values["_subscription_"] == "") or \
+                    (values["_price_"] == "") or \
+                    (values["_ending_"] == ""):
+                        psg.Popup("Ошибка", "Заполните все поля формы.")
+                        continue
+
                     service_name = values["_subscription_"]
                     state_id = db_driver.get_id_from_state(values["_state_"])
                     duration_id = db_driver.get_id_from_duration(values["_duration_"])
