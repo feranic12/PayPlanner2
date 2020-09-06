@@ -1,23 +1,11 @@
 import PySimpleGUI as psg
 import db
+import util
 
 
 def main():
     db_driver = db.DB("pay_planner2_db.db")
-    table_data = db_driver.get_subs_for_table()
-    new_table_data = []
-    for row in range(len(table_data)):
-        row_list = []
-        for col in range(len(table_data[row])):
-            if col != 2:
-                new_cell = table_data[row][col]
-            else:
-                new_cell = str(table_data[row][col]) + " мес."
-            row_list.append(new_cell)
-            tup = tuple(row_list)
-        new_table_data.append(tup)
-    table_data = new_table_data
-
+    table_data = util.make_table(db_driver)
     header_list = ["Название сервиса", "Состояние подписки",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = psg.Table(values = table_data,
@@ -77,7 +65,7 @@ def main():
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
                     db_driver.add_subscription_to_db(tuple_to_add)
                     psg.Popup("Добавление", "Новая подписка успешно добавлена!")
-                    window["_table_"](db_driver.get_subs_for_table())
+                    window["_table_"](util.make_table(db_driver))
             window2.close()
         if event == "Удалить":
             row_number = values["_table_"][0]
@@ -85,7 +73,7 @@ def main():
             id_to_delete = db_driver.get_sub_id_by_name(service_name_to_delete)
             db_driver.delete_sub(id_to_delete)
             psg.Popup("Удаление", "Выбранная подписка успешно удалена!")
-            window["_table_"](db_driver.get_subs_for_table())
+            window["_table_"](util.make_table(db_driver))
     window.close()
 
 
