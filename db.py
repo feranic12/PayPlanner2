@@ -84,6 +84,14 @@ class DB:
         cur.close()
         return result
 
+    # получение id по имени подписки
+    def get_sub_id_by_name(self, service_name_to_delete):
+        cur = self.con.cursor()
+        cur.execute("select id from subscriptions where service_name = ?", [service_name_to_delete])
+        result = cur.fetchone()[0]
+        cur.close()
+        return result
+
     # обновление текущей подписки
     def update_sub(self, t):
         cur = self.con.cursor()

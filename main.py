@@ -24,7 +24,7 @@ def main():
                 headings=header_list,
                justification="left", bind_return_key=True, key="_table_")
     layout = [[my_table],
-        [psg.Button("Добавить")]
+        [psg.Button("Добавить"), psg.Button("Удалить") ]
     ]
     window = psg.Window('Главное окно', layout)
 
@@ -77,6 +77,12 @@ def main():
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
                     db_driver.add_subscription_to_db(tuple_to_add)
                 window2.close()
+        if event == "Удалить":
+            row_number = values["_table_"][0]
+            service_name_to_delete = table_data[row_number][0]
+            id_to_delete = db_driver.get_sub_id_by_name(service_name_to_delete)
+            db_driver.delete_sub(id_to_delete)
+            psg.Popup("Удаление", "Выбранная подписка успешно удалена!")
     window.close()
 
 
