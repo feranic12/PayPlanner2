@@ -76,13 +76,16 @@ def main():
                     price = values["_price_"]
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
                     db_driver.add_subscription_to_db(tuple_to_add)
-                window2.close()
+                    psg.Popup("Добавление", "Новая подписка успешно добавлена!")
+                    window["_table_"](db_driver.get_subs_for_table())
+            window2.close()
         if event == "Удалить":
             row_number = values["_table_"][0]
             service_name_to_delete = table_data[row_number][0]
             id_to_delete = db_driver.get_sub_id_by_name(service_name_to_delete)
             db_driver.delete_sub(id_to_delete)
             psg.Popup("Удаление", "Выбранная подписка успешно удалена!")
+            window["_table_"](db_driver.get_subs_for_table())
     window.close()
 
 
