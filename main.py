@@ -17,7 +17,7 @@ def main():
     window = psg.Window('Главное окно', layout)
 
     while True:
-        event, values = window.read()
+        event, values = window.read(timeout=100)
         if event in (None, 'Exit', 'Cancel'):
             break
         if event == "_table_":
@@ -42,14 +42,22 @@ def main():
                         psg.Text("Срок продления:"), psg.Combo(duration_list, default_value=duration_list[0], key="_duration_"),
                        psg.Text("мес.")],
                          [psg.Text("Сумма списания:"), psg.Input(key="_price_")],
-                        [psg.Text("Срок окончания:"), psg.Input(key="_ending_"),
-                          psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%d-%m-%Y")],
+                        [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_"),
+                         # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
+                         psg.Button("Выбрать дату", key="_termend_")],
                           [psg.Button("Сохранить")]]
             window2 = psg.Window("Добавление подписки", layout2)
             while True:
-                event, values = window2.read()
+                event, values = window2.read(timeout=100)
                 if event in (None, 'Exit'):
                     break
+                if event == "_termend_":
+                    date = psg.popup_get_date()
+                    month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
+                    day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
+                    year = str(date[2])
+                    date_in_format = year + "-" + month + "-" + day
+                    window2["_ending_"](date_in_format)
                 if event == "Сохранить":
                     if (values["_subscription_"] == "") or \
                     (values["_price_"] == "") or \
