@@ -1,4 +1,4 @@
-class TableMaker:
+class Util:
     def make_basic_table(db_driver):
         table_data = db_driver.get_subs_for_table()
         new_table_data = []
