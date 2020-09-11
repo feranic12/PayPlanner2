@@ -12,7 +12,8 @@ def main():
                 headings=header_list,
                justification="left", bind_return_key=True, key="_table_")
     layout = [[my_table],
-        [psg.Button("Добавить"), psg.Button("Удалить") ]
+        [psg.Button("Добавить", key="_addbutton_"), psg.Button("Редактировать", key="_editbutton_"),
+         psg.Button("Удалить", key="_deletebutton_")]
     ]
     window = psg.Window('Главное окно', layout)
 
@@ -28,7 +29,7 @@ def main():
                 if event in (None, 'Ok'):
                     break
             window1.close()
-        if event == "Добавить":
+        if event == "_addbutton_":
             states_list = []
             duration_list = []
             durations_from_db = db_driver.get_all_durations()
@@ -75,7 +76,10 @@ def main():
                     psg.Popup("Добавление", "Новая подписка успешно добавлена!")
                     window["_table_"](Util.make_basic_table(db_driver))
             window2.close()
-        if event == "Удалить":
+        if event == "_deletebutton_":
+            if len(values["_table_"]) == 0:
+                psg.Popup("Ошибка", "Не выбрана запись для удаления")
+                continue
             row_number = values["_table_"][0]
             table_data = Util.make_basic_table(db_driver)
             service_name_to_delete = table_data[row_number][0]
