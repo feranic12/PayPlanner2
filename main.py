@@ -1,12 +1,13 @@
 import PySimpleGUI as psg
 import db
-from util import Util
+import util
 
 
 def main():
     db_driver = db.DB("pay_planner2_db.db")
-    layout1 = Util.layout1_setup(db_driver)
-    table_data = Util.make_basic_table(db_driver)
+    table_data = util.TableMaker.make_basic_table(db_driver)
+    layout1_maker = util.Layout1(db_driver)
+    layout2_maker = util.Layout2(db_driver)
     header_list = ["Название сервиса", "Состояние подписки",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = psg.Table(values = table_data,
@@ -20,14 +21,14 @@ def main():
 
     while True:
         event, values = window.read(timeout=100)
-        if event in (None, 'Exit', 'Cancel'):
+        if event in (None, "Exit", "Cancel"):
             break
         if event == "_addbutton_":
-            layout1 = Util.layout1_setup(db_driver)
+            layout1 = layout1_maker.make_layout1(db_driver)
             window1 = psg.Window("Добавление подписки", layout1)
             while True:
                 event, values = window1.read(timeout=100)
-                if event in (None, 'Exit'):
+                if event in (None, "Exit"):
                     break
                 if event == "_termend_":
                     date = psg.popup_get_date()
@@ -51,27 +52,32 @@ def main():
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
                     db_driver.add_subscription_to_db(tuple_to_add)
                     psg.Popup("Добавление", "Новая подписка успешно добавлена!")
-                    window["_table_"](Util.make_basic_table(db_driver))
+                    window["_table_"](util.make_basic_table(db_driver))
             window1.close()
             
         if event == "_editbutton_" or event == "_table_":
             if len(values["_table_"]) == 0:
                 psg.Popup("Ошибка", "Не выбрана запись для редактирования")
                 continue
-            layout2 = layout1
-            window2 = psg.Window("Редактирование записи", layout2)
+            layout2 = layout2_maker.make_layout2(db_driver)
+            window2 = psg.Window("Редактирование подписки", layout2)
+            while True:
+                event, values = window2.read()
+                if event in (None, "Exit", "Cancel"):
+                    break
+            window2.close()
                 
         if event == "_deletebutton_":
             if len(values["_table_"]) == 0:
                 psg.Popup("Ошибка", "Не выбрана запись для удаления")
                 continue
             row_number = values["_table_"][0]
-            table_data = Util.make_basic_table(db_driver)
+            table_data = util.make_basic_table(db_driver)
             service_name_to_delete = table_data[row_number][0]
             id_to_delete = db_driver.get_sub_id_by_name(service_name_to_delete)
             db_driver.delete_sub(id_to_delete)
             psg.Popup("Удаление", "Выбранная подписка успешно удалена!")
-            window["_table_"](Util.make_basic_table(db_driver))
+            window["_table_"](util.make_basic_table(db_driver))
     window.close()
 
 
