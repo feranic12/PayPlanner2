@@ -52,6 +52,8 @@ class Layout2(BaseLayoutMaker):
     def __init__(self, db_driver):
         BaseLayoutMaker.__init__(self, db_driver)
 
+
+
     def make_layout2(self, db_driver):
         return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
                 [psg.Text("Статус:"), psg.Combo(self.states_list, default_value=self.states_list[0], key="_state_"),
