@@ -1,5 +1,7 @@
 import PySimpleGUI as psg
-
+import time
+from datetime import date, timedelta, datetime
+from plyer import notification
 
 class TableMaker:
     def make_basic_table(db_driver):
@@ -23,15 +25,15 @@ class BaseLayoutMaker:
     def __init__(self):
         self.states_list = []
         self.duration_list = []
-        self.durations_from_db = self.db_driver.get_all_durations()
-        self.states_from_db = self.db_driver.get_all_states()
-        for st in range(0, len(self.states_from_db)):
-            self.states_list.append(str(self.states_from_db[st][0]))
-        for dur in range(0, len(self.durations_from_db)):
-            self.duration_list.append(str(self.durations_from_db[dur][0]))
+        self.durations_by_db = self.db_driver.get_all_durations()
+        self.states_by_db = self.db_driver.get_all_states()
+        for st in range(0, len(self.states_by_db)):
+            self.states_list.append(str(self.states_by_db[st][0]))
+        for dur in range(0, len(self.durations_by_db)):
+            self.duration_list.append(str(self.durations_by_db[dur][0]))
 
 
-class Layout1(BaseLayoutMaker):
+class Layout1Maker(BaseLayoutMaker):
     def __init__(self, db_driver):
         self.db_driver = db_driver
         BaseLayoutMaker.__init__(self)
@@ -49,7 +51,7 @@ class Layout1(BaseLayoutMaker):
                 [psg.Button("Сохранить", key="_savebutton_")]]
 
 
-class Layout2(BaseLayoutMaker):
+class Layout2Maker(BaseLayoutMaker):
     def __init__(self, db_driver):
         self.db_driver = db_driver
         BaseLayoutMaker.__init__(self)
@@ -57,8 +59,8 @@ class Layout2(BaseLayoutMaker):
     def make_layout2(self, t):
         db_driver = self.db_driver
         self.service_name_default = t[1]
-        self.state_default = db_driver.get_state_from_id(t[2])
-        self.duration_default = db_driver.get_duration_from_id(t[3])
+        self.state_default = db_driver.get_state_by_id(t[2])
+        self.duration_default = db_driver.get_duration_by_id(t[3])
         self.price_default = t[4]
         self.termend_default = t[5]
         return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_", default_text=self.service_name_default)],
@@ -71,3 +73,42 @@ class Layout2(BaseLayoutMaker):
                  # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
                  psg.Button("Выбрать дату", key="_termend_")],
                 [psg.Button("Сохранить", key="_savebutton_")]]
+
+
+class Notifier:
+    def __init__(self, db_driver):
+        self.db_driver = db_driver
+
+    def check_updates(self, db_driver):
+        subs = self.db_driver.get_all_subscriptions()
+        # n - число подписок, оканчивающихся сегодня или завтра
+        n = 0
+        for sub in subs:
+            # если подписка не прервана
+            if sub[2] != 2:
+                end_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
+                if end_date <= date.today() + timedelta(1):
+                    n = n + 1
+                    time.sleep(5)
+                    self.send_notification(sub)
+                # увеличение даты окончания периода подписки на месяц/год
+                while end_date <= date.today():
+
+                    # ежемесячная подписка
+                    duration = self.db_driver.get_duration_by_id(sub[3])
+                    if duration + end_date.month <= 12:
+                        end_date = date(end_date.year, end_date.month + duration, end_date.day)
+                    else:
+                        end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
+                    self.db_driver.update_end_date(sub[0], end_date)
+        return n
+
+    def send_notification(self, sub):
+        # если подписка не прервана
+        if sub[2] != 2:
+            notification.notify(
+                title='ПОДПИСЧИК',
+                message=sub[5] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[4]) + ' рублей',
+                app_name='PayPlanner',
+                app_icon='icons/icon1.ico'
+            )

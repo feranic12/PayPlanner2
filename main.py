@@ -5,9 +5,11 @@ import util
 
 def main():
     db_driver = db.DB("pay_planner2_db.db")
+    notifier = util.Notifier(db_driver)
+    notifier.check_updates(db_driver)
     table_data = util.TableMaker.make_basic_table(db_driver)
-    layout1_maker = util.Layout1(db_driver)
-    layout2_maker = util.Layout2(db_driver)
+    layout1_maker = util.Layout1Maker(db_driver)
+    layout2_maker = util.Layout2Maker(db_driver)
     header_list = ["Название сервиса", "Состояние подписки",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = psg.Table(values = table_data,
@@ -15,7 +17,7 @@ def main():
                justification="left", bind_return_key=True, key="_table_")
     layout = [[my_table],
         [psg.Button("Добавить", key="_addbutton_"), psg.Button("Редактировать", key="_editbutton_"),
-         psg.Button("Удалить", key="_deletebutton_")]
+         psg.Button("Удалить", key="_deletebutton_"), psg.Button("Проверить", key="_checkbutton_")]
     ]
     window = psg.Window('Главное окно', layout)
 
@@ -46,8 +48,8 @@ def main():
                         psg.Popup("Ошибка", "Заполните все поля формы.")
                         continue
                     service_name = values["_subscription_"]
-                    state_id = db_driver.get_id_from_state(values["_state_"])
-                    duration_id = db_driver.get_id_from_duration(values["_duration_"])
+                    state_id = db_driver.get_id_by_state(values["_state_"])
+                    duration_id = db_driver.get_id_by_duration(values["_duration_"])
                     price = values["_price_"]
                     term_end = values["_ending_"]
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
@@ -64,10 +66,10 @@ def main():
             table_data = util.TableMaker.make_basic_table(db_driver)
             service_name = table_data[row_number][0]
             id_to_update = db_driver.get_sub_id_by_name(service_name)
-            state_id = db_driver.get_id_from_state(table_data[row_number][1])
+            state_id = db_driver.get_id_by_state(table_data[row_number][1])
             duration_raw = table_data[row_number][2]
             duration = duration_raw[0:-5]
-            duration_id = db_driver.get_id_from_duration(duration)
+            duration_id = db_driver.get_id_by_duration(duration)
             price = table_data[row_number][3]
             term_end = table_data[row_number][4]
             tuple_to_update = (id_to_update, service_name, state_id, duration_id, price, term_end)
@@ -94,8 +96,8 @@ def main():
                         psg.Popup("Ошибка", "Заполните все поля формы.")
                         continue
                     new_service_name = values["_subscription_"]
-                    new_state_id = db_driver.get_id_from_state(values["_state_"])
-                    new_duration_id = db_driver.get_id_from_duration(values["_duration_"])
+                    new_state_id = db_driver.get_id_by_state(values["_state_"])
+                    new_duration_id = db_driver.get_id_by_duration(values["_duration_"])
                     new_price = values["_price_"]
                     new_term_end = values["_ending_"]
                     tuple_to_save = (id_to_update, new_service_name, new_state_id, new_duration_id, new_price, new_term_end)
@@ -115,6 +117,11 @@ def main():
             db_driver.delete_sub(id_to_delete)
             psg.Popup("Удаление", "Выбранная подписка успешно удалена!")
             window["_table_"](util.TableMaker.make_basic_table(db_driver))
+        if event == "_checkbutton_":
+            if notifier.check_updates(db_driver)>0:
+                window["_table_"](util.TableMaker.make_basic_table(db_driver))
+            else:
+                psg.Popup("Все обновлено", "В системе нет подписок, актуальных для продления.")
     window.close()
 
 

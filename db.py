@@ -50,28 +50,28 @@ class DB:
         return result
 
     # получение длительности по id
-    def get_id_from_duration(self, duration):
+    def get_id_by_duration(self, duration):
         cur = self.con.cursor()
         cur.execute("select id from durations where duration = ?", [duration])
         result = cur.fetchone()[0]
         cur.close()
         return result
 
-    def get_id_from_state(self, state):
+    def get_id_by_state(self, state):
         cur = self.con.cursor()
         cur.execute("select id from states where name = ?", [state])
         result = cur.fetchone()[0]
         cur.close()
         return result
 
-    def get_state_from_id(self, id):
+    def get_state_by_id(self, id):
         cur = self.con.cursor()
         cur.execute("select name from states where id = ?", [id])
         result = cur.fetchone()[0]
         cur.close()
         return result
 
-    def get_duration_from_id(self, id):
+    def get_duration_by_id(self, id):
         cur = self.con.cursor()
         cur.execute("select duration from durations where id = ?", [id])
         result = cur.fetchone()[0]
