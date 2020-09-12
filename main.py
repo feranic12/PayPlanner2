@@ -64,9 +64,9 @@ def main():
             table_data = util.TableMaker.make_basic_table(db_driver)
             service_name = table_data[row_number][0]
             state_id = db_driver.get_id_from_state(table_data[row_number][1])
-            duration_id_raw = table_data[row_number][2]
-            duration_id = duration_id_raw[0:-5]
-            db_driver.get_id_from_duration(duration_id)
+            duration_raw = table_data[row_number][2]
+            duration = duration_raw[0:-5]
+            duration_id = db_driver.get_id_from_duration(duration)
             price = table_data[row_number][3]
             term_end = table_data[row_number][4]
             tuple_to_update = (service_name, state_id, duration_id, price, term_end)
