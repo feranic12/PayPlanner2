@@ -39,7 +39,7 @@ def main():
                     year = str(date[2])
                     date_in_format = year + "-" + month + "-" + day
                     window1["_ending_"](date_in_format)
-                if event == "Сохранить":
+                if event == "_savebutton_":
                     if (values["_subscription_"] == "") or \
                     (values["_price_"] == "") or \
                     (values["_ending_"] == ""):
@@ -63,19 +63,45 @@ def main():
             row_number = values["_table_"][0]
             table_data = util.TableMaker.make_basic_table(db_driver)
             service_name = table_data[row_number][0]
+            id_to_update = db_driver.get_sub_id_by_name(service_name)
             state_id = db_driver.get_id_from_state(table_data[row_number][1])
             duration_raw = table_data[row_number][2]
             duration = duration_raw[0:-5]
             duration_id = db_driver.get_id_from_duration(duration)
             price = table_data[row_number][3]
             term_end = table_data[row_number][4]
-            tuple_to_update = (service_name, state_id, duration_id, price, term_end)
+            tuple_to_update = (id_to_update, service_name, state_id, duration_id, price, term_end)
             layout2 = layout2_maker.make_layout2(tuple_to_update)
             window2 = psg.Window("Редактирование подписки", layout2)
             while True:
                 event, values = window2.read()
                 if event in (None, "Exit", "Cancel"):
                     break
+                if event == "_termend_":
+                    date = psg.popup_get_date()
+                    if date is None:
+                        continue
+                    month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
+                    day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
+                    year = str(date[2])
+                    date_in_format = year + "-" + month + "-" + day
+                    window2["_ending_"](date_in_format)
+
+                if event == "_savebutton_":
+                    if (values["_subscription_"] == "") or \
+                    (values["_price_"] == "") or \
+                    (values["_ending_"] == ""):
+                        psg.Popup("Ошибка", "Заполните все поля формы.")
+                        continue
+                    new_service_name = values["_subscription_"]
+                    new_state_id = db_driver.get_id_from_state(values["_state_"])
+                    new_duration_id = db_driver.get_id_from_duration(values["_duration_"])
+                    new_price = values["_price_"]
+                    new_term_end = values["_ending_"]
+                    tuple_to_save = (id_to_update, new_service_name, new_state_id, new_duration_id, new_price, new_term_end)
+                    db_driver.update_sub(tuple_to_save)
+                    psg.Popup("Редактирование", "Подписка изменена!")
+                    window["_table_"](util.TableMaker.make_basic_table(db_driver))
             window2.close()
 
         if event == "_deletebutton_":

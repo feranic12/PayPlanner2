@@ -46,7 +46,7 @@ class Layout1(BaseLayoutMaker):
                 [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_"),
                  # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
                  psg.Button("Выбрать дату", key="_termend_")],
-                [psg.Button("Сохранить")]]
+                [psg.Button("Сохранить", key="_savebutton_")]]
 
 
 class Layout2(BaseLayoutMaker):
@@ -56,11 +56,11 @@ class Layout2(BaseLayoutMaker):
 
     def make_layout2(self, t):
         db_driver = self.db_driver
-        self.service_name_default = t[0]
-        self.state_default = db_driver.get_state_from_id(t[1])
-        self.duration_default = db_driver.get_duration_from_id(t[2])
-        self.price_default = t[3]
-        self.termend_default = t[4]
+        self.service_name_default = t[1]
+        self.state_default = db_driver.get_state_from_id(t[2])
+        self.duration_default = db_driver.get_duration_from_id(t[3])
+        self.price_default = t[4]
+        self.termend_default = t[5]
         return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_", default_text=self.service_name_default)],
                 [psg.Text("Статус:"), psg.Combo(self.states_list, default_value=self.state_default, key="_state_"),
                  psg.Text("Срок продления:"),
@@ -70,4 +70,4 @@ class Layout2(BaseLayoutMaker):
                 [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_", default_text=self.termend_default),
                  # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
                  psg.Button("Выбрать дату", key="_termend_")],
-                [psg.Button("Сохранить")]]
+                [psg.Button("Сохранить", key="_savebutton_")]]
