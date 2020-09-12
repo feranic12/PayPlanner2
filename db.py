@@ -64,6 +64,20 @@ class DB:
         cur.close()
         return result
 
+    def get_state_from_id(self, id):
+        cur = self.con.cursor()
+        cur.execute("select name from states where id = ?", [id])
+        result = cur.fetchone()[0]
+        cur.close()
+        return result
+
+    def get_duration_from_id(self, id):
+        cur = self.con.cursor()
+        cur.execute("select duration from durations where id = ?", [id])
+        result = cur.fetchone()[0]
+        cur.close()
+        return result
+
     # добавление новой подписки в БД
     def add_subscription_to_db(self, t):
         cur = self.con.cursor()

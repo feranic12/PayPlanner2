@@ -20,11 +20,11 @@ class TableMaker:
 
 
 class BaseLayoutMaker:
-    def __init__(self, db_driver):
+    def __init__(self):
         self.states_list = []
         self.duration_list = []
-        self.durations_from_db = db_driver.get_all_durations()
-        self.states_from_db = db_driver.get_all_states()
+        self.durations_from_db = self.db_driver.get_all_durations()
+        self.states_from_db = self.db_driver.get_all_states()
         for st in range(0, len(self.states_from_db)):
             self.states_list.append(str(self.states_from_db[st][0]))
         for dur in range(0, len(self.durations_from_db)):
@@ -33,7 +33,8 @@ class BaseLayoutMaker:
 
 class Layout1(BaseLayoutMaker):
     def __init__(self, db_driver):
-        BaseLayoutMaker.__init__(self, db_driver)
+        self.db_driver = db_driver
+        BaseLayoutMaker.__init__(self)
 
     def make_layout1(self, db_driver):
         return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
@@ -50,18 +51,23 @@ class Layout1(BaseLayoutMaker):
 
 class Layout2(BaseLayoutMaker):
     def __init__(self, db_driver):
-        BaseLayoutMaker.__init__(self, db_driver)
+        self.db_driver = db_driver
+        BaseLayoutMaker.__init__(self)
 
-
-
-    def make_layout2(self, db_driver):
-        return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
-                [psg.Text("Статус:"), psg.Combo(self.states_list, default_value=self.states_list[0], key="_state_"),
+    def make_layout2(self, t):
+        db_driver = self.db_driver
+        self.service_name_default = t[0]
+        self.state_default = db_driver.get_state_from_id(t[1])
+        self.duration_default = db_driver.get_duration_from_id(t[2])
+        self.price_default = t[3]
+        self.termend_default = t[4]
+        return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_", default_text=self.service_name_default)],
+                [psg.Text("Статус:"), psg.Combo(self.states_list, default_value=self.state_default, key="_state_"),
                  psg.Text("Срок продления:"),
-                 psg.Combo(self.duration_list, default_value=self.duration_list[0], key="_duration_"),
+                 psg.Combo(self.duration_list, default_value=self.duration_default, key="_duration_"),
                  psg.Text("мес.")],
-                [psg.Text("Сумма списания:"), psg.Input(key="_price_")],
-                [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_"),
+                [psg.Text("Сумма списания:"), psg.Input(key="_price_", default_text=self.price_default) ],
+                [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_", default_text=self.termend_default),
                  # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
                  psg.Button("Выбрать дату", key="_termend_")],
                 [psg.Button("Сохранить")]]
