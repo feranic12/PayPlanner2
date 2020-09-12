@@ -32,6 +32,8 @@ def main():
                     break
                 if event == "_termend_":
                     date = psg.popup_get_date()
+                    if date is None:
+                        continue
                     month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
                     day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
                     year = str(date[2])
