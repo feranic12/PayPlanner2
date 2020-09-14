@@ -57,6 +57,7 @@ class DB:
         cur.close()
         return result
 
+    # получение id по названию состояния
     def get_id_by_state(self, state):
         cur = self.con.cursor()
         cur.execute("select id from states where name = ?", [state])
@@ -64,6 +65,7 @@ class DB:
         cur.close()
         return result
 
+    # получение название состояния по id
     def get_state_by_id(self, id):
         cur = self.con.cursor()
         cur.execute("select name from states where id = ?", [id])
@@ -71,6 +73,7 @@ class DB:
         cur.close()
         return result
 
+    # получение срока действия подписки по id
     def get_duration_by_id(self, id):
         cur = self.con.cursor()
         cur.execute("select duration from durations where id = ?", [id])

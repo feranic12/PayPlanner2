@@ -8,6 +8,8 @@ def main():
     db_driver = db.DB("pay_planner2_db.db")
     notifier = util.Notifier(db_driver)
     notifier.check_updates(db_driver)
+
+    # главное окно приложения - window
     table_data = util.TableMaker.make_basic_table(db_driver)
     layout1_maker = util.Layout1Maker(db_driver)
     layout2_maker = util.Layout2Maker(db_driver)
@@ -28,6 +30,7 @@ def main():
         if event in (None, "Exit", "Cancel"):
             break
         if event == "_addbutton_":
+            # окно добавления подписки window1
             layout1 = layout1_maker.make_layout1(db_driver)
             window1 = psg.Window("Добавление подписки", layout1)
             while True:
@@ -35,14 +38,10 @@ def main():
                 if event in (None, "Exit"):
                     break
                 if event == "_termend_":
-                    date = psg.popup_get_date()
-                    if date is None:
+                    input_date = psg.popup_get_date()
+                    if input_date is None:
                         continue
-                    date_in_format = util.get_date_in_format(date)
-                    month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
-                    day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
-                    year = str(date[2])
-                    date_in_format = year + "-" + month + "-" + day
+                    date_in_format = util.get_date_in_format(input_date)
                     window1["_ending_"](date_in_format)
                 if event == "_savebutton_":
                     if (values["_subscription_"] == "") or \
@@ -76,6 +75,8 @@ def main():
             price = table_data[row_number][3]
             term_end = table_data[row_number][4]
             tuple_to_update = (id_to_update, service_name, state_id, duration_id, price, term_end)
+
+            # окно редактирования подписки window2
             layout2 = layout2_maker.make_layout2(tuple_to_update)
             window2 = psg.Window("Редактирование подписки", layout2)
             while True:
@@ -83,13 +84,10 @@ def main():
                 if event in (None, "Exit", "Cancel"):
                     break
                 if event == "_termend_":
-                    date = psg.popup_get_date()
-                    if date is None:
+                    input_date = psg.popup_get_date()
+                    if input_date is None:
                         continue
-                    month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
-                    day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
-                    year = str(date[2])
-                    date_in_format = year + "-" + month + "-" + day
+                    date_in_format = util.get_date_in_format(input_date)
                     window2["_ending_"](date_in_format)
 
                 if event == "_savebutton_":
@@ -109,6 +107,7 @@ def main():
                     window["_table_"](util.TableMaker.make_basic_table(db_driver))
             window2.close()
 
+        # удаление выбранной подписки
         if event == "_deletebutton_":
             if len(values["_table_"]) == 0:
                 psg.Popup("Ошибка", "Не выбрана запись для удаления")
@@ -120,11 +119,15 @@ def main():
             db_driver.delete_sub(id_to_delete)
             psg.Popup("Удаление", "Выбранная подписка успешно удалена!")
             window["_table_"](util.TableMaker.make_basic_table(db_driver))
+
+        # проверка наличия пригодных для продления подписок, и, если они есть, отправка уведомления в Windows
         if event == "_checkbutton_":
             if notifier.check_updates(db_driver)>0:
                 window["_table_"](util.TableMaker.make_basic_table(db_driver))
             else:
                 psg.Popup("Все обновлено", "В системе нет подписок, актуальных для продления.")
+
+        # вызов формы суммирования подписок
         if event == "_sumbutton_":
             today = datetime.datetime.today()
             today_str = datetime.datetime.strftime(today, "%Y-%m-%d")
