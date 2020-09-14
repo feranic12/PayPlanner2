@@ -3,7 +3,7 @@ import time
 from datetime import date, timedelta, datetime
 from plyer import notification
 
-#класс, формирующий таблицу в главном окне
+# класс, формирующий таблицу в главном окне
 class TableMaker:
     def make_basic_table(db_driver):
         table_data = db_driver.get_subs_for_table()
@@ -22,7 +22,7 @@ class TableMaker:
         return table_data
 
 
-#базовый класс, реализующий общую часть формирования разметки форм добавления и радектирования подписки
+# базовый класс, реализующий общую часть формирования разметки форм добавления и радектирования подписки
 class BaseLayoutMaker:
     def __init__(self):
         self.states_list = []

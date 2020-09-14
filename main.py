@@ -2,10 +2,11 @@ import PySimpleGUI as psg
 import db
 import util
 import datetime
+import os.path
 
 
 def main():
-    db_driver = db.DB("pay_planner2_db.db")
+    db_driver = db.DB(os.path.abspath("pay_planner2_db.db"))
     notifier = util.Notifier(db_driver)
     notifier.check_updates(db_driver)
 
@@ -132,19 +133,37 @@ def main():
             today = datetime.datetime.today()
             today_str = datetime.datetime.strftime(today, "%Y-%m-%d")
             layout3 = [
-                [psg.Text("Начало срока"), psg.Input(key="_sumstartinput_", disabled=True, default_value=today_str),
+                [psg.Text("Начало срока"), psg.Input(key="_sumstartinput_", disabled=True, default_text=today_str),
                     psg.Button("Выбрать дату", key="_sumstartbutton_")],
-                [psg.Text("Конец срока"), psg.Input(key="_sumendinput_", disabled=True, default_value=today_str),
-                    psg.Button("Выбрать дату", key="_sumendbutton_")]
+                [psg.Text("Конец срока"), psg.Input(key="_sumendinput_", disabled=True, default_text=today_str),
+                    psg.Button("Выбрать дату", key="_sumendbutton_")],
+                 [psg.Button("Посчитать", key="_countbutton_")]
             ]
-            window3 = psg.Window3("Сумма за период", layout3)
+            window3 = psg.Window("Сумма за период", layout3)
+            date1 = date2 = today_str
             while True:
                 event, values = window3.Read()
                 if event in (None, "Exit"):
                     break
                 if event == "_sumstartbutton_":
-                    psg.popup_get_date()
-
+                    input_date = psg.popup_get_date()
+                    if input_date is None:
+                        continue
+                    date1 = util.get_date_in_format(input_date)
+                    window3['_sumstartinput_'](date1)
+                if event == "_sumendbutton_":
+                    input_date = psg.popup_get_date()
+                    if input_date is None:
+                        continue
+                    date2 = util.get_date_in_format(input_date)
+                    window3['_sumendinput_'](date2)
+                if event == "_countbutton_":
+                    if date1 > date2:
+                        psg.Popup("Ошибка!", "Дата начала периода превосходит дату его окончания!")
+                        break
+                    sum_price = db_driver.get_sum_price(date1, date2)[0]
+                    psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price))
+            window3.close()
     window.close()
 
 
