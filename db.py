@@ -132,5 +132,13 @@ class DB:
         self.con.commit()
         cur.close()
 
+    # вычисление суммарного расхода за заданный двумя датами период
+    def get_sum_price(self, date1, date2):
+        cur = self.con.cursor()
+        cur.execute("select sum(price) from subscriptions where date(term_end) >= date(?) and date(term_end) <= date(?)", [date1, date2])
+        result = cur.fetchone()
+        cur.close()
+        return result
+
     def __del__(self):
         self.con.close()

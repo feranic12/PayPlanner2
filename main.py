@@ -1,6 +1,7 @@
 import PySimpleGUI as psg
 import db
 import util
+import datetime
 
 
 def main():
@@ -17,7 +18,8 @@ def main():
                justification="left", bind_return_key=True, key="_table_")
     layout = [[my_table],
         [psg.Button("Добавить", key="_addbutton_"), psg.Button("Редактировать", key="_editbutton_"),
-         psg.Button("Удалить", key="_deletebutton_"), psg.Button("Проверить", key="_checkbutton_")]
+         psg.Button("Удалить", key="_deletebutton_"), psg.Button("Проверить", key="_checkbutton_"),
+         psg.Button("Сумма за период", key="_sumbutton_")]
     ]
     window = psg.Window('Главное окно', layout)
 
@@ -36,6 +38,7 @@ def main():
                     date = psg.popup_get_date()
                     if date is None:
                         continue
+                    date_in_format = util.get_date_in_format(date)
                     month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
                     day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
                     year = str(date[2])
@@ -122,6 +125,23 @@ def main():
                 window["_table_"](util.TableMaker.make_basic_table(db_driver))
             else:
                 psg.Popup("Все обновлено", "В системе нет подписок, актуальных для продления.")
+        if event == "_sumbutton_":
+            today = datetime.datetime.today()
+            today_str = datetime.datetime.strftime(today, "%Y-%m-%d")
+            layout3 = [
+                [psg.Text("Начало срока"), psg.Input(key="_sumstartinput_", disabled=True, default_value=today_str),
+                    psg.Button("Выбрать дату", key="_sumstartbutton_")],
+                [psg.Text("Конец срока"), psg.Input(key="_sumendinput_", disabled=True, default_value=today_str),
+                    psg.Button("Выбрать дату", key="_sumendbutton_")]
+            ]
+            window3 = psg.Window3("Сумма за период", layout3)
+            while True:
+                event, values = window3.Read()
+                if event in (None, "Exit"):
+                    break
+                if event == "_sumstartbutton_":
+                    psg.popup_get_date()
+
     window.close()
 
 

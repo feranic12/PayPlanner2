@@ -3,6 +3,7 @@ import time
 from datetime import date, timedelta, datetime
 from plyer import notification
 
+#класс, формирующий таблицу в главном окне
 class TableMaker:
     def make_basic_table(db_driver):
         table_data = db_driver.get_subs_for_table()
@@ -20,7 +21,7 @@ class TableMaker:
         table_data = new_table_data
         return table_data
 
-
+#базовый класс, реализующий общую часть формирования разметки форм добавления и радектирования подписки
 class BaseLayoutMaker:
     def __init__(self):
         self.states_list = []
@@ -32,7 +33,7 @@ class BaseLayoutMaker:
         for dur in range(0, len(self.durations_by_db)):
             self.duration_list.append(str(self.durations_by_db[dur][0]))
 
-
+# класс, генерирующий разметку формы добавления подписки
 class Layout1Maker(BaseLayoutMaker):
     def __init__(self, db_driver):
         self.db_driver = db_driver
@@ -51,6 +52,7 @@ class Layout1Maker(BaseLayoutMaker):
                 [psg.Button("Сохранить", key="_savebutton_")]]
 
 
+# класс, генерирующий разметку формы редактирования подписки
 class Layout2Maker(BaseLayoutMaker):
     def __init__(self, db_driver):
         self.db_driver = db_driver
@@ -75,10 +77,12 @@ class Layout2Maker(BaseLayoutMaker):
                 [psg.Button("Сохранить", key="_savebutton_")]]
 
 
+# класс, анализирующий подписки и выдающий объявления
 class Notifier:
     def __init__(self, db_driver):
         self.db_driver = db_driver
 
+    # анализ подписок, подсчет числа подписок, подлежащих продлению
     def check_updates(self, db_driver):
         subs = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня или завтра
@@ -103,6 +107,7 @@ class Notifier:
                     self.db_driver.update_end_date(sub[0], end_date)
         return n
 
+    #отправка оповещения в трей Windows
     def send_notification(self, sub):
         # если подписка не прервана
         if sub[2] != 2:
@@ -112,3 +117,13 @@ class Notifier:
                 app_name='PayPlanner',
                 app_icon='icons/icon1.ico'
             )
+
+# преобразование даты, полученной с помощью popup_get_date, к требуемому формату.
+def get_date_in_format(date):
+    if date is None:
+        return 1
+    month = "0" + str(date[0]) if len(str(date[0])) == 1 else str(date[0])
+    day = "0" + str(date[1]) if len(str(date[1])) == 1 else str(date[1])
+    year = str(date[2])
+    date_in_format = year + "-" + month + "-" + day
+    return date_in_format
