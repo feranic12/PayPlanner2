@@ -162,6 +162,8 @@ def main():
                         psg.Popup("Ошибка!", "Дата начала периода превосходит дату его окончания!")
                         break
                     sum_price = db_driver.get_sum_price(date1, date2)[0]
+                    if sum_price == None:
+                        sum_price = 0
                     psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price))
             window3.close()
     window.close()
