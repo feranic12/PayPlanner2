@@ -24,7 +24,7 @@ def main():
          psg.Button("Удалить", key="_deletebutton_"), psg.Button("Проверить", key="_checkbutton_"),
          psg.Button("Сумма за период", key="_sumbutton_")]
     ]
-    window = psg.Window('Главное окно', layout)
+    window = psg.Window('Главное окно', layout, icon="icons/icon1.ico")
 
     while True:
         event, values = window.read(timeout=100)
@@ -33,7 +33,7 @@ def main():
         if event == "_addbutton_":
             # окно добавления подписки window1
             layout1 = layout1_maker.make_layout1(db_driver)
-            window1 = psg.Window("Добавление подписки", layout1)
+            window1 = psg.Window("Добавление подписки", layout1, icon="icons/icon1.ico")
             while True:
                 event, values = window1.read(timeout=100)
                 if event in (None, "Exit"):
@@ -48,7 +48,7 @@ def main():
                     if (values["_subscription_"] == "") or \
                     (values["_price_"] == "") or \
                     (values["_ending_"] == ""):
-                        psg.Popup("Ошибка", "Заполните все поля формы.")
+                        psg.Popup("Ошибка", "Заполните все поля формы.", icon="icons/icon1.ico")
                         continue
                     service_name = values["_subscription_"]
                     state_id = db_driver.get_id_by_state(values["_state_"])
@@ -57,13 +57,13 @@ def main():
                     term_end = values["_ending_"]
                     tuple_to_add = (service_name, state_id, duration_id, price, term_end)
                     db_driver.add_subscription_to_db(tuple_to_add)
-                    psg.Popup("Добавление", "Новая подписка успешно добавлена!")
+                    psg.Popup("Добавление", "Новая подписка успешно добавлена!", icon="icons/icon1.ico")
                     window["_table_"](util.TableMaker.make_basic_table(db_driver))
             window1.close()
             
         if event == "_editbutton_" or event == "_table_":
             if len(values["_table_"]) == 0:
-                psg.Popup("Ошибка", "Не выбрана запись для редактирования")
+                psg.Popup("Ошибка", "Не выбрана запись для редактирования", icon="icons/icon1.ico")
                 continue
             row_number = values["_table_"][0]
             table_data = util.TableMaker.make_basic_table(db_driver)
@@ -79,7 +79,7 @@ def main():
 
             # окно редактирования подписки window2
             layout2 = layout2_maker.make_layout2(tuple_to_update)
-            window2 = psg.Window("Редактирование подписки", layout2)
+            window2 = psg.Window("Редактирование подписки", layout2, icon="icons/icon1.ico")
             while True:
                 event, values = window2.read()
                 if event in (None, "Exit", "Cancel"):
@@ -104,14 +104,14 @@ def main():
                     new_term_end = values["_ending_"]
                     tuple_to_save = (id_to_update, new_service_name, new_state_id, new_duration_id, new_price, new_term_end)
                     db_driver.update_sub(tuple_to_save)
-                    psg.Popup("Редактирование", "Подписка изменена!")
+                    psg.Popup("Редактирование", "Подписка изменена!", icon="icons/icon1.ico")
                     window["_table_"](util.TableMaker.make_basic_table(db_driver))
             window2.close()
 
         # удаление выбранной подписки
         if event == "_deletebutton_":
             if len(values["_table_"]) == 0:
-                psg.Popup("Ошибка", "Не выбрана запись для удаления")
+                psg.Popup("Ошибка", "Не выбрана запись для удаления", icon="icons/icon1.ico")
                 continue
             row_number = values["_table_"][0]
             table_data = util.TableMaker.make_basic_table(db_driver)
@@ -126,7 +126,7 @@ def main():
             if notifier.check_updates(db_driver)>0:
                 window["_table_"](util.TableMaker.make_basic_table(db_driver))
             else:
-                psg.Popup("Все обновлено", "В системе нет подписок, актуальных для продления.")
+                psg.Popup("Все обновлено", "В системе нет подписок, актуальных для продления.", icon="icons/icon1.ico")
 
         # вызов формы суммирования подписок
         if event == "_sumbutton_":
@@ -139,7 +139,7 @@ def main():
                     psg.Button("Выбрать дату", key="_sumendbutton_")],
                  [psg.Button("Посчитать", key="_countbutton_")]
             ]
-            window3 = psg.Window("Сумма за период", layout3)
+            window3 = psg.Window("Сумма за период", layout3, icon="icons/icon1.ico")
             date1 = date2 = today_str
             while True:
                 event, values = window3.Read()
@@ -159,12 +159,12 @@ def main():
                     window3['_sumendinput_'](date2)
                 if event == "_countbutton_":
                     if date1 > date2:
-                        psg.Popup("Ошибка!", "Дата начала периода превосходит дату его окончания!")
+                        psg.Popup("Ошибка!", "Дата начала периода превосходит дату его окончания!", icon="icons/icon1.ico")
                         break
                     sum_price = db_driver.get_sum_price(date1, date2)[0]
-                    if sum_price == None:
+                    if sum_price is None:
                         sum_price = 0
-                    psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price))
+                    psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price), icon="icons/icon1.ico")
             window3.close()
     window.close()
 
