@@ -157,6 +157,7 @@ def main():
                         continue
                     date2 = datetime.datetime.strptime(util.get_date_in_format(input_date), "%Y-%m-%d").date()
                     window3['_sumendinput_'](date2)
+                # подсчет суммарной стоимости подписок за период
                 if event == "_countbutton_":
                     subs = db_driver.get_all_subscriptions()
                     if date1 > date2:

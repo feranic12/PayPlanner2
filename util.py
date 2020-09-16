@@ -130,6 +130,7 @@ def get_date_in_format(input_date):
     return date_in_format
 
 
+# подсчет суммарной стоимсти подписок за период
 def calculate_sum_price(db_driver, subs, start_date, end_date):
     result_sum = 0
     for sub in subs:
