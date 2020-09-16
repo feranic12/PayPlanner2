@@ -33,7 +33,7 @@ def main():
         if event == "_addbutton_":
             # окно добавления подписки window1
             layout1 = layout1_maker.make_layout1(db_driver)
-            window1 = psg.Window("Добавление подписки", layout1, icon="icons/icon1.ico")
+            window1 = psg.Window("Добавление подписки", layout1, modal=True, icon="icons/icon1.ico")
             while True:
                 event, values = window1.read(timeout=100)
                 if event in (None, "Exit"):
@@ -79,7 +79,7 @@ def main():
 
             # окно редактирования подписки window2
             layout2 = layout2_maker.make_layout2(tuple_to_update)
-            window2 = psg.Window("Редактирование подписки", layout2, icon="icons/icon1.ico")
+            window2 = psg.Window("Редактирование подписки", layout2, modal=True, icon="icons/icon1.ico")
             while True:
                 event, values = window2.read()
                 if event in (None, "Exit", "Cancel"):
@@ -139,7 +139,7 @@ def main():
                     psg.Button("Выбрать дату", key="_sumendbutton_")],
                  [psg.Button("Посчитать", key="_countbutton_")]
             ]
-            window3 = psg.Window("Сумма за период", layout3, icon="icons/icon1.ico")
+            window3 = psg.Window("Сумма за период", layout3, modal=True, icon="icons/icon1.ico")
             date1 = date2 = today.date()
             while True:
                 event, values = window3.Read()
