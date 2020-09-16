@@ -12,8 +12,6 @@ def main():
 
     # главное окно приложения - window
     table_data = util.TableMaker.make_basic_table(db_driver)
-    layout1_maker = util.Layout1Maker(db_driver)
-    layout2_maker = util.Layout2Maker(db_driver)
     header_list = ["Название сервиса", "Состояние подписки",
                    "Период продления","Сумма", "Срок окончания"]
     my_table = psg.Table(values = table_data,
@@ -32,7 +30,8 @@ def main():
             break
         if event == "_addbutton_":
             # окно добавления подписки window1
-            layout1 = layout1_maker.make_layout1(db_driver)
+            layout1_maker = util.Layout1Maker(db_driver)
+            layout1 = layout1_maker.make_layout1()
             window1 = psg.Window("Добавление подписки", layout1, modal=True, icon="icons/icon1.ico")
             while True:
                 event, values = window1.read(timeout=100)
@@ -78,7 +77,9 @@ def main():
             tuple_to_update = (id_to_update, service_name, state_id, duration_id, price, term_end)
 
             # окно редактирования подписки window2
-            layout2 = layout2_maker.make_layout2(tuple_to_update)
+
+            layout2_maker = util.Layout2Maker(db_driver, tuple_to_update)
+            layout2 = layout2_maker.make_layout2()
             window2 = psg.Window("Редактирование подписки", layout2, modal=True, icon="icons/icon1.ico")
             while True:
                 event, values = window2.read()

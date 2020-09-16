@@ -3,6 +3,7 @@ import time
 from datetime import date, timedelta, datetime
 from plyer import notification
 
+
 # класс, формирующий таблицу в главном окне
 class TableMaker:
     def make_basic_table(db_driver):
@@ -41,7 +42,7 @@ class Layout1Maker(BaseLayoutMaker):
         self.db_driver = db_driver
         BaseLayoutMaker.__init__(self)
 
-    def make_layout1(self, db_driver):
+    def make_layout1(self):
         return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_")],
                 [psg.Text("Статус:"), psg.Combo(self.states_list, default_value=self.states_list[0], key="_state_"),
                  psg.Text("Срок продления:"),
@@ -56,17 +57,17 @@ class Layout1Maker(BaseLayoutMaker):
 
 # класс, генерирующий разметку формы редактирования подписки
 class Layout2Maker(BaseLayoutMaker):
-    def __init__(self, db_driver):
+    def __init__(self, db_driver, t):
         self.db_driver = db_driver
         BaseLayoutMaker.__init__(self)
-
-    def make_layout2(self, t):
-        db_driver = self.db_driver
         self.service_name_default = t[1]
         self.state_default = db_driver.get_state_by_id(t[2])
         self.duration_default = db_driver.get_duration_by_id(t[3])
         self.price_default = t[4]
         self.termend_default = t[5]
+
+    def make_layout2(self):
+        db_driver = self.db_driver
         return [[psg.Text("Название подписки:"), psg.Input(key="_subscription_", default_text=self.service_name_default)],
                 [psg.Text("Статус:"), psg.Combo(self.states_list, default_value=self.state_default, key="_state_"),
                  psg.Text("Срок продления:"),
