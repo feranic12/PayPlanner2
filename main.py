@@ -140,7 +140,7 @@ def main():
                  [psg.Button("Посчитать", key="_countbutton_")]
             ]
             window3 = psg.Window("Сумма за период", layout3, icon="icons/icon1.ico")
-            date1 = date2 = today_str
+            date1 = date2 = today.date()
             while True:
                 event, values = window3.Read()
                 if event in (None, "Exit"):
@@ -149,19 +149,20 @@ def main():
                     input_date = psg.popup_get_date()
                     if input_date is None:
                         continue
-                    date1 = util.get_date_in_format(input_date)
+                    date1 = datetime.datetime.strptime(util.get_date_in_format(input_date), "%Y-%m-%d").date()
                     window3['_sumstartinput_'](date1)
                 if event == "_sumendbutton_":
                     input_date = psg.popup_get_date()
                     if input_date is None:
                         continue
-                    date2 = util.get_date_in_format(input_date)
+                    date2 = datetime.datetime.strptime(util.get_date_in_format(input_date), "%Y-%m-%d").date()
                     window3['_sumendinput_'](date2)
                 if event == "_countbutton_":
+                    subs = db_driver.get_all_subscriptions()
                     if date1 > date2:
                         psg.Popup("Ошибка!", "Дата начала периода превосходит дату его окончания!", icon="icons/icon1.ico")
                         break
-                    sum_price = db_driver.get_sum_price(date1, date2)[0]
+                    sum_price = util.calculate_sum_price(db_driver, subs, date1, date2)
                     if sum_price is None:
                         sum_price = 0
                     psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price), icon="icons/icon1.ico")
