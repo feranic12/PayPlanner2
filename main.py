@@ -170,10 +170,10 @@ def main():
                     psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price), icon="icons/icon1.ico")
             window3.close()
         if event == "_diagrambutton_":
-            layout4 = [psg.Canvas(key="_canvas_")]
+            layout4 = [[psg.Canvas(key="_canvas_")]]
             window4 = psg.Window("Диаграмма", layout4)
             fig = MatPlotLibHelper.draw_figure_mpl()
-            MatPlotLibHelper.draw_figure(window4["_canvas_"].TKCanvas, fig )
+            MatPlotLibHelper.draw_figure_psg(window4["_canvas_"].TKCanvas, fig )
             event, values = window4.read()
             window4.close()
 
