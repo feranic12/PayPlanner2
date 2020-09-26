@@ -171,9 +171,9 @@ def main():
             window3.close()
         if event == "_diagrambutton_":
             layout4 = [[psg.Canvas(key="_canvas_")]]
-            window4 = psg.Window("Диаграмма", layout4)
+            window4 = psg.Window("Диаграмма", layout4, finalize=True)
             fig = MatPlotLibHelper.draw_figure_mpl()
-            MatPlotLibHelper.draw_figure_psg(window4["_canvas_"].TKCanvas, fig )
+            MatPlotLibHelper.draw_figure_psg(window4["_canvas_"].TKCanvas, fig)
             event, values = window4.read()
             window4.close()
 
