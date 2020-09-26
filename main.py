@@ -3,7 +3,7 @@ import db
 import util
 import datetime
 import os.path
-
+from MatPlotLibHelper import MatPlotLibHelper
 
 def main():
     db_driver = db.DB(os.path.abspath("pay_planner2_db.db"))
@@ -20,7 +20,7 @@ def main():
     layout = [[my_table],
         [psg.Button("Добавить", key="_addbutton_"), psg.Button("Редактировать", key="_editbutton_"),
          psg.Button("Удалить", key="_deletebutton_"), psg.Button("Проверить", key="_checkbutton_"),
-         psg.Button("Сумма за период", key="_sumbutton_")]
+         psg.Button("Сумма за период", key="_sumbutton_"), psg.Button("Диаграмма", key="_diagrambutton_")]
     ]
     window = psg.Window('Главное окно', layout, icon="icons/icon1.ico")
 
@@ -169,7 +169,15 @@ def main():
                         sum_price = 0
                     psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price), icon="icons/icon1.ico")
             window3.close()
-    window.close()
+        if event == "_diagrambutton_":
+            layout4 = [psg.Canvas(key="_canvas_")]
+            window4 = psg.Window("Диаграмма", layout4)
+            fig = MatPlotLibHelper.draw_figure_mpl()
+            MatPlotLibHelper.draw_figure(window4["_canvas_"].TKCanvas, fig )
+            event, values = window4.read()
+            window4.close()
+
+
 
 
 if __name__=="__main__":
