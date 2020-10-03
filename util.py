@@ -132,8 +132,9 @@ def get_date_in_format(input_date):
 
 
 # подсчет суммарной стоимсти подписок за период
-def calculate_sum_price(db_driver, subs, start_date, end_date):
+def calculate_sum_price(db_driver, start_date, end_date):
     result_sum = 0
+    subs = db_driver.get_all_subscriptions()
     for sub in subs:
         next_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
         duration = db_driver.get_duration_by_id(sub[3])
@@ -145,3 +146,5 @@ def calculate_sum_price(db_driver, subs, start_date, end_date):
                 else:
                     next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
     return result_sum
+
+# def calculate_sum_price_for_month(db_driver, subs, month)

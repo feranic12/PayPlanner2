@@ -15,7 +15,7 @@ class MatPlotLibHelper:
     @staticmethod
     def draw_figure_mpl():
         fig = matplotlib.figure.Figure(figsize=(5, 4), dpi=100)
-        index = [0, 1, 2, 3, 4]
+        index = ["окт 2020", "ноя 2020", "дек 2020", "янв 2021", "фев 2021"]
         values = [5, 7, 3, 4, 6]
         fig.add_subplot(111).bar(index, values)
         return fig

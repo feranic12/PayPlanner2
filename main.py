@@ -160,11 +160,11 @@ def main():
                     window3['_sumendinput_'](date2)
                 # подсчет суммарной стоимости подписок за период
                 if event == "_countbutton_":
-                    subs = db_driver.get_all_subscriptions()
+
                     if date1 > date2:
                         psg.Popup("Ошибка!", "Дата начала периода превосходит дату его окончания!", icon="icons/icon1.ico")
                         break
-                    sum_price = util.calculate_sum_price(db_driver, subs, date1, date2)
+                    sum_price = util.calculate_sum_price(db_driver, date1, date2)
                     if sum_price is None:
                         sum_price = 0
                     psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price), icon="icons/icon1.ico")
