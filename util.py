@@ -150,12 +150,16 @@ def calculate_sum_price(db_driver, start_date, end_date):
 
 # подсчет суммарной стоимости подписок за один месяц.
 # Результат будет использован для построения столбчатой диаграммы за год.
-def calculate_sum_price_for_month(db_driver, month):
+def calculate_sum_price_for_diagram(db_driver, month, year):
     result_sum = 0
     subs = db_driver.get_all_subscriptions()
     for sub in subs:
         next_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
         duration = db_driver.get_duration_by_id(sub[3])
+        first_month = datetime.today.month + 1
+        first_year = datetime.today.year
+        last_month = 12 if first_month == 1 else first_month-1
+        last_year = first_year if first_month ==1 else first_year + 1
 
 
 # получение последнего дня месяца, учитывая високосные года
