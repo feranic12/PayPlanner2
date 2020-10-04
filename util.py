@@ -156,8 +156,6 @@ def calculate_sum_price(db_driver, start_date, end_date):
 def make_dataset(db_driver):
     start_month = 1 if datetime.datetime.today().month == 12 else datetime.datetime.today().month + 1
     start_year = datetime.datetime.today().year + 1 if datetime.datetime.today().month == 12 else datetime.datetime.today().year
-    end_month = 12 if start_month == 1 else start_month - 1
-    end_year = start_year if start_month == 1 else start_year + 1
     dataset = []
     for current_month in range(start_month, start_month + 12):
         if current_month <= 12:
@@ -170,7 +168,6 @@ def make_dataset(db_driver):
 # подсчет суммарной стоимости подписок за один месяц.
 # Результат будет использован для построения столбчатой диаграммы за год.
 def calculate_sum_price_for_one_month(db_driver, month, year):
-    result_sum = 0
     start_date = datetime.date(year, month, 1)
     end_date = datetime.date(year, month, get_last_day_of_month(month, year))
     return calculate_sum_price(db_driver, start_date, end_date)
