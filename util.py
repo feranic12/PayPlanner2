@@ -139,13 +139,17 @@ def calculate_sum_price(db_driver, start_date, end_date):
     for sub in subs:
         next_date = datetime.datetime.strptime(sub[5], "%Y-%m-%d").date()
         duration = db_driver.get_duration_by_id(sub[3])
-        if next_date >= start_date:
-            while next_date <= end_date:
-                result_sum += sub[4]
-                if next_date.month + duration <= 12:
-                    next_date = date(next_date.year, next_date.month + duration, next_date.day)
-                else:
-                    next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+        while next_date < start_date:
+            if next_date.month + duration <= 12:
+                next_date = date(next_date.year, next_date.month + duration, next_date.day)
+            else:
+                next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+        while next_date <= end_date:
+            result_sum += sub[4]
+            if next_date.month + duration <= 12:
+                next_date = date(next_date.year, next_date.month + duration, next_date.day)
+            else:
+                next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
     return result_sum
 
 
