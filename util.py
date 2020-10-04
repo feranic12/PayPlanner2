@@ -153,6 +153,7 @@ def calculate_sum_price(db_driver, start_date, end_date):
     return result_sum
 
 
+# формирование набора данных для диаграммы
 def make_dataset(db_driver):
     start_month = 1 if datetime.datetime.today().month == 12 else datetime.datetime.today().month + 1
     start_year = datetime.datetime.today().year + 1 if datetime.datetime.today().month == 12 else datetime.datetime.today().year
