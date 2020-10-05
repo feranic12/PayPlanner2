@@ -155,9 +155,11 @@ def calculate_sum_price(db_driver, start_date, end_date):
 
 # формирование набора данных для диаграммы
 def make_dataset(db_driver):
+    months = {1: "янв.", 2: "фев.", 3: "мар.", 4: "апр.", 5: "май", 6: "июн.", 7: "июл.", 8: "авг.", 9: "сен.",
+              10: "окт.", 11: "ноя.", 12: "дек."}
+    dataset = []
     start_month = 1 if datetime.datetime.today().month == 12 else datetime.datetime.today().month + 1
     start_year = datetime.datetime.today().year + 1 if datetime.datetime.today().month == 12 else datetime.datetime.today().year
-    dataset = []
     for current_month in range(start_month, start_month + 12):
         if current_month <= 12:
             dataset.append(calculate_sum_price_for_one_month(db_driver, current_month, start_year))
