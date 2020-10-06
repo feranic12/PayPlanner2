@@ -17,8 +17,11 @@ class MatPlotLibHelper:
     def draw_figure_mpl(db_driver):
         fig = matplotlib.figure.Figure(figsize=(5, 4), dpi=100)
         index = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-        values = util.make_dataset(db_driver)
-        fig.add_subplot(111).bar(index, values)
+        dataset = util.make_dataset(db_driver)
+        values = dataset[0]
+        xticks = dataset[1]
+        plt = fig.add_subplot(111)
+        plt.bar(index, values)
         return fig
 
 
