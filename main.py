@@ -174,8 +174,7 @@ def main():
             window4 = psg.Window("Диаграмма", layout4, finalize=True)
             fig = MatPlotLibHelper.draw_figure_mpl(db_driver)
             MatPlotLibHelper.draw_figure_psg(window4["_canvas_"].TKCanvas, fig)
-            event, values = window4.read()
-            window4.close()
+            window4.read()
 
 
 if __name__=="__main__":

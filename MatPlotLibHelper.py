@@ -20,10 +20,11 @@ class MatPlotLibHelper:
         dataset = util.make_dataset(db_driver)
         values = dataset[0]
         index = dataset[1]
-        plt.bar(index, values)
+        plt.bar(index, values, color="lightblue")
         fig = plt.gcf()
         fig.set_figwidth(12)
         fig.set_figheight(5)
+
         return fig
 
 
