@@ -20,13 +20,14 @@ def main():
     layout = [[my_table],
         [psg.Button("Добавить", key="_addbutton_"), psg.Button("Редактировать", key="_editbutton_"),
          psg.Button("Удалить", key="_deletebutton_"), psg.Button("Проверить", key="_checkbutton_"),
-         psg.Button("Сумма за период", key="_sumbutton_"), psg.Button("Диаграмма", key="_diagrambutton_")]
+         psg.Button("Сумма за период", key="_sumbutton_"), psg.Button("Диаграмма", key="_diagrambutton_"),
+         psg.Cancel("Отмена")]
     ]
     window = psg.Window('Главное окно', layout, icon="icons/icon1.ico")
 
     while True:
-        event, values = window.read(timeout=100)
-        if event in (None, "Exit", "Cancel"):
+        event, values = window.read()
+        if event in (None, "Отмена"):
             break
         if event == "_addbutton_":
             # окно добавления подписки window1
@@ -34,8 +35,8 @@ def main():
             layout1 = layout1_maker.make_layout1()
             window1 = psg.Window("Добавление подписки", layout1, modal=True, icon="icons/icon1.ico")
             while True:
-                event, values = window1.read(timeout=100)
-                if event in (None, "Exit"):
+                event, values = window1.read()
+                if event in (None, "Отмена"):
                     break
                 if event == "_termend_":
                     input_date = psg.popup_get_date()
@@ -83,7 +84,7 @@ def main():
             window2 = psg.Window("Редактирование подписки", layout2, modal=True, icon="icons/icon1.ico")
             while True:
                 event, values = window2.read()
-                if event in (None, "Exit", "Cancel"):
+                if event in (None, "Отмена"):
                     break
                 if event == "_termend_":
                     input_date = psg.popup_get_date()
@@ -138,13 +139,13 @@ def main():
                     psg.Button("Выбрать дату", key="_sumstartbutton_")],
                 [psg.Text("Конец срока"), psg.Input(key="_sumendinput_", disabled=True, default_text=today_str),
                     psg.Button("Выбрать дату", key="_sumendbutton_")],
-                 [psg.Button("Посчитать", key="_countbutton_")]
+                 [psg.Button("Посчитать", key="_countbutton_"), psg.Cancel("Отмена")]
             ]
             window3 = psg.Window("Сумма за период", layout3, modal=True, icon="icons/icon1.ico")
             date1 = date2 = today.date()
             while True:
                 event, values = window3.Read()
-                if event in (None, "Exit"):
+                if event in (None, "Отмена"):
                     break
                 if event == "_sumstartbutton_":
                     input_date = psg.popup_get_date()
@@ -170,12 +171,16 @@ def main():
                     psg.Popup("Сумма", "Сумма расходов за выбранный период: {0} рублей ".format(sum_price), icon="icons/icon1.ico")
             window3.close()
         if event == "_diagrambutton_":
-            layout4 = [[psg.Canvas(key="_canvas_")]]
+            layout4 = [[psg.Canvas(key="_canvas_")],
+                       [psg.Cancel("Отмена")]]
             window4 = psg.Window("Диаграмма", layout4, finalize=True)
             fig = MatPlotLibHelper.draw_figure_mpl(db_driver)
             MatPlotLibHelper.draw_figure_psg(window4["_canvas_"].TKCanvas, fig)
-            window4.read()
-
+            while True:
+                event, values = window4.read()
+                if event in (None, "Отмена"):
+                    break
+            window4.close()
 
 if __name__=="__main__":
     main()

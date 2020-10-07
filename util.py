@@ -53,7 +53,7 @@ class Layout1Maker(BaseLayoutMaker):
                 [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_"),
                  # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
                  psg.Button("Выбрать дату", key="_termend_")],
-                [psg.Button("Сохранить", key="_savebutton_")]]
+                [psg.Button("Сохранить", key="_savebutton_"), psg.Cancel("Отмена")]]
 
 
 # класс, генерирующий разметку формы редактирования подписки
@@ -78,7 +78,7 @@ class Layout2Maker(BaseLayoutMaker):
                 [psg.Text("Срок окончания:"), psg.Input(disabled=True, key="_ending_", default_text=self.termend_default),
                  # psg.CalendarButton("Выбрать дату", target="_ending_", key="_termend_", format="%Y-%m-%d")],
                  psg.Button("Выбрать дату", key="_termend_")],
-                [psg.Button("Сохранить", key="_savebutton_")]]
+                [psg.Button("Сохранить", key="_savebutton_"), psg.Cancel("Отмена")]]
 
 
 # класс, анализирующий подписки и выдающий объявления
