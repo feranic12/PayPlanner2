@@ -15,13 +15,15 @@ class MatPlotLibHelper:
 
     @staticmethod
     def draw_figure_mpl(db_driver):
-        fig = matplotlib.figure.Figure(figsize=(5, 4), dpi=100)
-        index = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        #fig = matplotlib.figure.Figure(figsize=(5, 4), dpi=100
+        #index = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         dataset = util.make_dataset(db_driver)
         values = dataset[0]
-        xticks = dataset[1]
-        plt = fig.add_subplot(111)
+        index = dataset[1]
         plt.bar(index, values)
+        fig = plt.gcf()
+        fig.set_figwidth(12)
+        fig.set_figheight(5)
         return fig
 
 
